@@ -515,5 +515,20 @@ namespace Microsoft.AspNet.SignalR.Owin
             return app.UseMiddleware<WSFix>();
         }
     }
+
+    class SetCapsMiddleware : OwinMiddleware
+    {
+        const string OwinConstants_ServerCapabilities = "server.Capabilities";
+        const string OwinConstants_WebSocketVersion = "websocket.Version";
+        public SetCapsMiddleware(OwinMiddleware next) : base(next) { }
+        public override Task Invoke(IOwinContext context)
+        {
+            var cap = new Dictionary<string, object>();
+            cap[OwinConstants_WebSocketVersion] = "1";
+            context.Environment[OwinConstants_ServerCapabilities] = cap;
+            return Next.Invoke(context);
+        }
+    }
+
 }
 #endif
