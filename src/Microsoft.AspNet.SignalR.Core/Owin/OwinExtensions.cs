@@ -14,9 +14,14 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Owin.Middleware;
 using Microsoft.AspNet.SignalR.Tracing;
+#if NETCOREAPP
+using Microsoft.AspNet.SignalR.Owin;
+using Microsoft.AspNetCore.DataProtection;
+#else
 using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Extensions;
+#endif
 using System.Globalization;
 
 namespace Owin
@@ -51,6 +56,8 @@ namespace Owin
         /// <param name="configuration">The <see cref="HubConfiguration"/> to use</param>
         public static IAppBuilder MapSignalR(this IAppBuilder builder, string path, HubConfiguration configuration)
         {
+            if(builder==null)
+                throw new ArgumentNullException(nameof(builder));
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");
@@ -75,6 +82,9 @@ namespace Owin
         /// <param name="configuration">The <see cref="HubConfiguration"/> to use</param>
         public static void RunSignalR(this IAppBuilder builder, HubConfiguration configuration)
         {
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+
             builder.UseSignalRMiddleware<HubDispatcherMiddleware>(configuration);
         }
 
@@ -116,6 +126,9 @@ namespace Owin
         /// <param name="configuration">The <see cref="ConnectionConfiguration"/> to use</param>
         public static IAppBuilder MapSignalR(this IAppBuilder builder, string path, Type connectionType, ConnectionConfiguration configuration)
         {
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");
@@ -157,6 +170,8 @@ namespace Owin
         /// <returns></returns>
         public static void RunSignalR(this IAppBuilder builder, Type connectionType, ConnectionConfiguration configuration)
         {
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
             builder.UseSignalRMiddleware<PersistentConnectionMiddleware>(connectionType, configuration);
         }
 
@@ -199,15 +214,21 @@ namespace Owin
 
                 // If we're using DPAPI then fallback to the default protected data if running
                 // on mono since it doesn't support any of this
+#if !NETCOREAPP
                 if (provider == null && MonoUtility.IsRunningMono)
                 {
                     protectedData = new DefaultProtectedData();
                 }
                 else
+#endif
                 {
                     if (provider == null)
                     {
+#if NETCOREAPP
+                        provider = new EphemeralDataProtectionProvider();
+#else
                         provider = new DpapiDataProtectionProvider(instanceName);
+#endif
                     }
 
                     protectedData = new DataProtectionProviderProtectedData(provider);

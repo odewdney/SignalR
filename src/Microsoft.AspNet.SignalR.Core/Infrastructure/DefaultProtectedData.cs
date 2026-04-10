@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Microsoft.AspNet.SignalR.Infrastructure
 {
+#if !NETCOREAPP
     public class DefaultProtectedData : IProtectedData
     {
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
@@ -33,4 +34,5 @@ namespace Microsoft.AspNet.SignalR.Infrastructure
             return _encoding.GetString(unprotectedBytes);
         }
     }
+#endif
 }

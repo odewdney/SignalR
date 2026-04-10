@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace Microsoft.AspNet.SignalR.Infrastructure
 {
+#if !NETCOREAPP
     internal class PerformanceCounterWrapper : IPerformanceCounter
     {
         private readonly PerformanceCounter _counter;
@@ -65,5 +66,6 @@ namespace Microsoft.AspNet.SignalR.Infrastructure
         {
             return _counter.NextSample();
         }
-    }
+}
+#endif
 }

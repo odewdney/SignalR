@@ -39,7 +39,9 @@ namespace Microsoft.AspNet.SignalR.Hubs
         /// <returns>A dynamic representation of all clients except the calling client ones specified.</returns>
         public dynamic AllExcept(params string[] excludeConnectionIds)
         {
+#pragma warning disable CA1062 // Validate arguments of public methods
             return new ClientProxy(Connection, Invoker, HubName, PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds));
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         /// <summary>
@@ -93,11 +95,13 @@ namespace Microsoft.AspNet.SignalR.Hubs
                 throw new ArgumentException(Resources.Error_ArgumentNullOrEmpty, "groupName");
             }
 
+#pragma warning disable CA1062 // Validate arguments of public methods
             return new GroupProxy(Connection, 
                                   Invoker, 
                                   groupName, 
                                   HubName, 
                                   PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds));
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         /// <summary>
@@ -113,12 +117,14 @@ namespace Microsoft.AspNet.SignalR.Hubs
                 throw new ArgumentNullException("groupNames");
             }
 
+#pragma warning disable CA1062 // Validate arguments of public methods
             return new MultipleSignalProxy(Connection,
                                            Invoker,
                                            groupNames,
                                            HubName,
                                            PrefixHelper.HubGroupPrefix,
                                            PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds));
+#pragma warning restore CA1062 // Validate arguments of public methods
         }
 
         public dynamic User(string userId)

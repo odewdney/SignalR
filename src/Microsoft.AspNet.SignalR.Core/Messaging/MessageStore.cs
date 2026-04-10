@@ -9,7 +9,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
     // Represents a message store that is backed by a ring buffer.
     public sealed class MessageStore<T> where T : class
     {
-        private static readonly uint _minFragmentCount = 4;
+        private const uint _minFragmentCount = 4;
         private static readonly uint _maxFragmentSize = (IntPtr.Size == 4) ? (uint)16384 : (uint)8192; // guarantees that fragments never end up in the LOH
         private static readonly ArraySegment<T> _emptyArraySegment = new ArraySegment<T>(new T[0]);
         private readonly uint _offset;

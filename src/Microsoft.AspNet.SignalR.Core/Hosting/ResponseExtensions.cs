@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+#if !NETCOREAPP
 using Microsoft.Owin;
+#endif
 
 namespace Microsoft.AspNet.SignalR.Hosting
 {
@@ -21,7 +23,7 @@ namespace Microsoft.AspNet.SignalR.Hosting
         /// <param name="response">The <see cref="IResponse"/>.</param>
         /// <param name="data">The data to write to the connection.</param>
         /// <returns>A task that represents when the connection is closed.</returns>
-        public static Task End(this IResponse response, string data)
+        public static async Task End(this IResponse response, string data)
         {
             if (response == null)
             {
@@ -29,9 +31,7 @@ namespace Microsoft.AspNet.SignalR.Hosting
             }
 
             var bytes = Encoding.UTF8.GetBytes(data);
-            response.Write(new ArraySegment<byte>(bytes, 0, bytes.Length));
-
-            return TaskAsyncHelper.Empty;
+            await response.WriteAsync(new ArraySegment<byte>(bytes, 0, bytes.Length));
         }
     }
 }

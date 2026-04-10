@@ -77,9 +77,11 @@ namespace Microsoft.AspNet.SignalR
                 throw new ArgumentNullException("connection");
             }
 
+#pragma warning disable CA1062 // Validate arguments of public methods
             var message = new ConnectionMessage(connection.DefaultSignal,
                                                 value,
                                                 PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds));
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             return connection.Send(message);
         }

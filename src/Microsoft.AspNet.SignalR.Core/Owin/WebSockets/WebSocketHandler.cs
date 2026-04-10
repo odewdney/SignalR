@@ -1,7 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-#if NET45 || NETSTANDARD2_0
+#if NET45 || NET48 || NETSTANDARD2_0 || NETCOREAPP
 
 using System;
 using System.Diagnostics;
@@ -76,6 +76,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
                     return;
                 }
 
+#pragma warning disable CA1031 // Do not catch general exception types
                 try
                 {
                     await context.Handler.WebSocket
@@ -87,6 +88,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
                     // Swallow exceptions on send
                     Trace.TraceError("Error while sending: " + ex);
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             },
             sendContext);
         }
@@ -109,6 +111,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
                     return;
                 }
 
+#pragma warning disable CA1031 // Do not catch general exception types
                 try
                 {
                     await context.Handler.WebSocket
@@ -120,6 +123,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
                     // Swallow exceptions on close
                     Trace.TraceError("Error while closing the websocket: " + ex);
                 }
+#pragma warning restore CA1031 // Do not catch general exception types
             },
             closeContext);
         }
@@ -158,6 +162,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
         {
             bool closedReceived = false;
 
+#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 // first, set primitives and initialize the object
@@ -211,6 +216,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
                     OnError();
                 }
             }
+#pragma warning restore CA1031 // Do not catch general exception types
 
             try
             {

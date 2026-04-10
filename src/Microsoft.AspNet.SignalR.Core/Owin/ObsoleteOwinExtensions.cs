@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNet.SignalR;
 
+#if !NETCOREAPP
 namespace Owin
 {
     public static class ObsoleteOwinExtensions
@@ -84,3 +85,4 @@ namespace Owin
         }
     }
 }
+#endif

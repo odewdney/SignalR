@@ -7,7 +7,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+#if NETCOREAPP
+using Microsoft.AspNet.SignalR.Owin;
+#else
 using Microsoft.Owin;
+#endif
 using Newtonsoft.Json;
 
 namespace Microsoft.AspNet.SignalR.Json
@@ -62,7 +66,7 @@ namespace Microsoft.AspNet.SignalR.Json
             {
                 throw new InvalidOperationException();
             }
-            sb.AppendFormat("{0}(", callback).Append(payload).Append(");");
+            sb.AppendFormat(CultureInfo.InvariantCulture, "{0}(", callback).Append(payload).Append(");");
             return sb.ToString();
         }
 
@@ -131,8 +135,7 @@ namespace Microsoft.AspNet.SignalR.Json
             return true;
         }
 
-        internal static bool TryRejectJSONPRequest(ConnectionConfiguration config,
-                                                   IOwinContext context)
+        internal static bool TryRejectJSONPRequest(ConnectionConfiguration config, IOwinContext context)
         {
             // If JSONP is enabled then do nothing
             if (config.EnableJSONP)

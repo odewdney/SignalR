@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace System.Diagnostics
 {
+    [CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
     public static class TraceSourceExtensions
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "msg")]

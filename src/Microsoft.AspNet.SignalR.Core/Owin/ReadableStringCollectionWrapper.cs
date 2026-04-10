@@ -4,7 +4,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNet.SignalR.Hosting;
+#if !NETCOREAPP
 using Microsoft.Owin;
+#endif
 
 namespace Microsoft.AspNet.SignalR.Owin
 {

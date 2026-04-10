@@ -17,7 +17,9 @@ using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNet.SignalR.Owin;
 using Microsoft.AspNet.SignalR.Tracing;
 using Microsoft.AspNet.SignalR.Transports;
+#if !NETCOREAPP
 using Microsoft.Owin;
+#endif
 using Newtonsoft.Json;
 
 namespace Microsoft.AspNet.SignalR
@@ -300,11 +302,13 @@ namespace Microsoft.AspNet.SignalR
         /// <param name="statusCode">If this method returns false, this output parameter receives an HTTP status code to report.</param>
         /// <returns>A boolean indicating if the connection token was valid.</returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "We want to catch any exception when unprotecting data.")]
+#pragma warning disable CA1021
         protected internal virtual bool TryGetConnectionId(HostContext context,
                                            string connectionToken,
                                            out string connectionId,
                                            out string message,
                                            out int statusCode)
+#pragma warning restore CA1021
         {
             string unprotectedConnectionToken = null;
 
@@ -314,6 +318,9 @@ namespace Microsoft.AspNet.SignalR
             // message and statusCode are only valid when this method returns false
             message = null;
             statusCode = 400;
+
+            if (context == null)
+                return false;
 
             try
             {
@@ -515,7 +522,7 @@ namespace Microsoft.AspNet.SignalR
 
             var payload = new
             {
-                Url = context.Request.LocalPath.Replace("/negotiate", ""),
+                Url = context.Request.LocalPath.Replace("/negotiate", "", StringComparison.Ordinal),
                 ConnectionToken = ProtectedData.Protect(connectionToken, Purposes.ConnectionToken),
                 ConnectionId = connectionId,
                 KeepAliveTimeout = keepAliveTimeout != null ? keepAliveTimeout.Value.TotalSeconds : (double?)null,

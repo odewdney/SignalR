@@ -15,6 +15,11 @@ namespace Microsoft.AspNet.SignalR.Hubs
 
         public static IEnumerable<MethodInfo> GetExportedHubMethods(Type type)
         {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (!typeof(IHub).IsAssignableFrom(type))
             {
                 return Enumerable.Empty<MethodInfo>();

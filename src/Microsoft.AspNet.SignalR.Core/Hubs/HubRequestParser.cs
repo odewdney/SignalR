@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNet.SignalR.Json;
 using Newtonsoft.Json;
@@ -53,7 +54,7 @@ namespace Microsoft.AspNet.SignalR.Hubs
             }
 
             // Get the raw JSON string and check if it's over 4K
-            string json = deserializedData.State.ToString();
+            string json = deserializedData.State.ToString(CultureInfo.InvariantCulture);
 
             if (json.Length > 4096)
             {

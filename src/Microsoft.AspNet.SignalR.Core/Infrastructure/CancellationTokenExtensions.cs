@@ -50,7 +50,15 @@ namespace Microsoft.AspNet.SignalR.Infrastructure
             // PORT: The code is defensive enough that we could just remove the #ifs here.
 #if NETSTANDARD1_3 || NETSTANDARD2_0
             return fallback;
-#elif NET40 || NET45
+#elif NETCOREAPP
+            using (ExecutionContext.SuppressFlow())
+            {
+                return (ref CancellationToken token, Action<object> callback, object state) =>
+                {
+                    return token.Register(callback, state);
+                };
+            }
+#elif NET40 || NET45 || NET48
             MethodInfo methodInfo = null;
 
             try

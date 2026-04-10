@@ -37,7 +37,11 @@ namespace Microsoft.AspNet.SignalR.Hubs
             VerifyInterface(typeof(T));
 
             var assemblyName = new AssemblyName(ClientModuleName);
+#if NETCOREAPP
+            AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#else
             AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#endif
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(ClientModuleName);
             Type clientType = GenerateInterfaceImplementation(moduleBuilder);
 

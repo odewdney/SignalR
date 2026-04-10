@@ -104,7 +104,7 @@ namespace Microsoft.AspNet.SignalR.Transports
             return WriteInit(initContext);
         }
 
-        private static Task WriteInit(ForeverFrameTransportContext context)
+        private static async Task WriteInit(ForeverFrameTransportContext context)
         {
             context.Transport.Context.Response.ContentType = "text/html; charset=UTF-8";
 
@@ -115,13 +115,13 @@ namespace Microsoft.AspNet.SignalR.Transports
                 htmlOutputWriter.WriteRaw((string)context.State);
                 htmlOutputWriter.Flush();
 
-                context.Transport.Context.Response.Write(htmlOutputWriter.Buffer);
+                await context.Transport.Context.Response.WriteAsync(htmlOutputWriter.Buffer);
             }
 
-            return context.Transport.Context.Response.Flush();
+            await context.Transport.Context.Response.Flush();
         }
 
-        private static Task PerformSend(object state)
+        private static async Task PerformSend(object state)
         {
             var context = (ForeverFrameTransportContext)state;
 
@@ -133,13 +133,13 @@ namespace Microsoft.AspNet.SignalR.Transports
                 htmlOutputWriter.WriteRaw(");</script>\r\n");
                 htmlOutputWriter.Flush();
 
-                context.Transport.Context.Response.Write(htmlOutputWriter.Buffer);
+                await context.Transport.Context.Response.WriteAsync(htmlOutputWriter.Buffer);
             }
 
-            return context.Transport.Context.Response.Flush();
+            await context.Transport.Context.Response.Flush();
         }
 
-        private static Task PerformKeepAlive(object state)
+        private static async Task PerformKeepAlive(object state)
         {
             var transport = (ForeverFrameTransport)state;
 
@@ -151,10 +151,10 @@ namespace Microsoft.AspNet.SignalR.Transports
                 htmlOutputWriter.WriteLine();
                 htmlOutputWriter.Flush();
 
-                transport.Context.Response.Write(htmlOutputWriter.Buffer);
+                await transport.Context.Response.WriteAsync(htmlOutputWriter.Buffer);
             }
 
-            return transport.Context.Response.Flush();
+            await transport.Context.Response.Flush();
         }
 
         private struct ForeverFrameTransportContext
@@ -194,7 +194,7 @@ namespace Microsoft.AspNet.SignalR.Transports
 
             private static string JavascriptEncode(string input)
             {
-                return input.Replace("<", "\\u003c").Replace(">", "\\u003e");
+                return input.Replace("<", "\\u003c", StringComparison.Ordinal).Replace(">", "\\u003e", StringComparison.Ordinal);
             }
         }
     }

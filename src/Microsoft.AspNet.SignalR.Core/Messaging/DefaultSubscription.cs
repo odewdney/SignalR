@@ -221,7 +221,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
         private static string GetCursorPrefix()
         {
+#if NETCOREAPP
+            using (var rng = RandomNumberGenerator.Create())
+#else
             using (var rng = new RNGCryptoServiceProvider())
+#endif
             {
                 var data = new byte[4];
                 rng.GetBytes(data);

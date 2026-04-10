@@ -1,12 +1,12 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.AspNet.SignalR.Infrastructure;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace Microsoft.AspNet.SignalR.Messaging
 {
@@ -41,6 +41,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
         public bool ContainsKey(string key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (PrefixHelper.HasGroupPrefix(key))
             {
                 return _groupTopics.ContainsKey(key);
@@ -51,6 +56,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
         public bool TryGetValue(string key, out Topic topic)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (PrefixHelper.HasGroupPrefix(key))
             {
                 return _groupTopics.TryGetValue(key, out topic);
@@ -71,6 +81,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
         public bool TryRemove(string key)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             Topic topic;
             if (PrefixHelper.HasGroupPrefix(key))
             {
@@ -82,6 +97,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
         public Topic GetOrAdd(string key, Func<string, Topic> factory)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (PrefixHelper.HasGroupPrefix(key))
             {
                 return _groupTopics.GetOrAdd(key, factory);

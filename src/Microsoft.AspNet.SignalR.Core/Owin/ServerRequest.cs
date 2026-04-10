@@ -7,7 +7,11 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Hosting;
+#if NETCOREAPP
+using Microsoft.AspNetCore.Owin;
+#else
 using Microsoft.Owin;
+#endif
 
 namespace Microsoft.AspNet.SignalR.Owin
 {

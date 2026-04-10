@@ -39,7 +39,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
         {
             using (var ms = new MemoryStream())
             {
-                var binaryWriter = new BinaryWriter(ms);
+                using var binaryWriter = new BinaryWriter(ms);
 
                 binaryWriter.Write(Messages.Count);
                 for (int i = 0; i < Messages.Count; i++)
@@ -61,7 +61,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
             using (var stream = new MemoryStream(data))
             {
-                var binaryReader = new BinaryReader(stream);
+                using var binaryReader = new BinaryReader(stream);
                 var message = new ScaleoutMessage();
                 message.Messages = new List<Message>();
                 int count = binaryReader.ReadInt32();

@@ -127,7 +127,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
 
         public void WriteTo(Stream stream)
         {
-            var binaryWriter = new BinaryWriter(stream);
+            using var binaryWriter = new BinaryWriter(stream, _encoding, true);
             binaryWriter.Write(Source);
             binaryWriter.Write(Key);
             binaryWriter.Write(Value.Count);
@@ -141,7 +141,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
         public static Message ReadFrom(Stream stream)
         {
             var message = new Message();
-            var binaryReader = new BinaryReader(stream);
+            using var binaryReader = new BinaryReader(stream, _encoding, true);
             message.Source = binaryReader.ReadString();
             message.Key = binaryReader.ReadString();
             int bytes = binaryReader.ReadInt32();

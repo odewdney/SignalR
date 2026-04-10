@@ -7,7 +7,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Hosting;
+#if NETCOREAPP
+using Microsoft.AspNet.SignalR.Owin;
+#else
 using Microsoft.Owin;
+#endif
 
 namespace Microsoft.AspNet.SignalR.Owin
 {
@@ -43,7 +47,13 @@ namespace Microsoft.AspNet.SignalR.Owin
 
         public void Write(ArraySegment<byte> data)
         {
-            _responseBody.Write(data.Array, data.Offset, data.Count);
+            //_responseBody.Write(data.Array, data.Offset, data.Count);
+            _responseBody.WriteAsync(data.Array, data.Offset, data.Count).Wait();
+        }
+
+        public Task WriteAsync(ArraySegment<byte> data)
+        {
+            return _responseBody.WriteAsync(data.Array, data.Offset, data.Count);
         }
 
         public Task Flush()

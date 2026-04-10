@@ -2,11 +2,26 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
+#if NETCOREAPP
+using Microsoft.AspNetCore.DataProtection;
+#else
 using Microsoft.Owin.Security.DataProtection;
+#endif
 
 namespace Microsoft.AspNet.SignalR.Infrastructure
 {
+#if NETCOREAPP
+    public static class IDataProtectionProviderExt
+    {
+        public static IDataProtector Create(this IDataProtectionProvider provider, string purpose)
+        {
+            return provider?.CreateProtector(purpose);
+        }
+    }
+#endif
+
     public class DataProtectionProviderProtectedData : IProtectedData
     {
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);

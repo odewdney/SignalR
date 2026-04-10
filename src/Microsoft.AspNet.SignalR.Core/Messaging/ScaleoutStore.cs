@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace Microsoft.AspNet.SignalR.Messaging
 {
@@ -96,6 +95,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
         // Adds a message to the store. Returns the ID of the newly added message.
         public ulong Add(ScaleoutMapping mapping)
         {
+            if (mapping == null)
+            {
+                throw new ArgumentNullException(nameof(mapping));
+            }
+
             // keep looping in TryAddImpl until it succeeds
             ulong newMessageId;
             while (!TryAddImpl(mapping, out newMessageId)) ;

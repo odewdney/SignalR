@@ -7,6 +7,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Tracing;
 
+[assembly: CLSCompliant(false)]
 namespace Microsoft.AspNet.SignalR
 {
     /// <summary>

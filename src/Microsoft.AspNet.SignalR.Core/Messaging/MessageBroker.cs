@@ -73,6 +73,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
         {
             do
             {
+#pragma warning disable CA1031
                 try
                 {
                     context.Broker._counters.MessageBusBusyWorkers.Increment();
@@ -91,6 +92,7 @@ namespace Microsoft.AspNet.SignalR.Messaging
                 {
                     context.Broker._counters.MessageBusBusyWorkers.Decrement();
                 }
+#pragma warning restore CA1031
             }
             while (context.Subscription.UnsetQueued() && !context.Broker._disposed);
         }

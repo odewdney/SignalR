@@ -1,10 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Globalization;
+using System.IO;
 
 namespace Microsoft.AspNet.SignalR.Json
 {
@@ -17,7 +18,7 @@ namespace Microsoft.AspNet.SignalR.Json
 
         public JRawValue(JRaw value)
         {
-            _value = value.ToString();
+            _value = value.ToString(CultureInfo.InvariantCulture);
         }
 
         public object ConvertTo(Type type)

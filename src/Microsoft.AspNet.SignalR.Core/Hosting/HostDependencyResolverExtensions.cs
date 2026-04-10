@@ -46,11 +46,13 @@ namespace Microsoft.AspNet.SignalR.Hosting
             // TODO: Guard against multiple calls to this
 
             // When the host triggers the shutdown token, dispose the resolver
+#pragma warning disable CA2000 // Dispose objects before losing scope
             hostShutdownToken.SafeRegister(state =>
             {
                 ((IDependencyResolver)state).Dispose();
             },
             resolver);
+#pragma warning restore CA2000 // Dispose objects before losing scope
         }
     }
 }

@@ -94,6 +94,7 @@ namespace Microsoft.AspNet.SignalR.Owin
             // async void methods are not supported in ASP.NET and they throw a InvalidOperationException.
             Task.Run(async () =>
             {
+#pragma warning disable CA1031
                 try
                 {
                     await _callback(handler).PreserveCulture();
@@ -103,6 +104,7 @@ namespace Microsoft.AspNet.SignalR.Owin
                     // This error was already handled by other layers
                     // we can no-op here so we don't cause an unobserved exception
                 }
+#pragma warning restore CA1031
 
                 // Always try to close async, if the websocket already closed
                 // then this will no-op

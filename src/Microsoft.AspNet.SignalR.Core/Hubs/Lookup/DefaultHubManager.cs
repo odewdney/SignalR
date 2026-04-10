@@ -1,10 +1,11 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.AspNet.SignalR.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using Microsoft.AspNet.SignalR.Json;
 
 namespace Microsoft.AspNet.SignalR.Hubs
 {
@@ -101,11 +102,13 @@ namespace Microsoft.AspNet.SignalR.Hubs
             return GetHubs(predicate: null).Select(hub => _activator.Create(hub));
         }
 
+#pragma warning disable CA1822 // Mark members as static
         private void ValidateHubDescriptor(HubDescriptor hub)
+#pragma warning restore CA1822 // Mark members as static
         {
-            if (hub.Name.Contains("."))
+            if (hub.Name.Contains(".", StringComparison.Ordinal))
             {
-                throw new InvalidOperationException(string.Format(Resources.Error_HubNameIsInvalid, hub.Name));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, Resources.Error_HubNameIsInvalid, hub.Name));
             }
         }
     }

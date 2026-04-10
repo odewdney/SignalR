@@ -45,7 +45,7 @@ namespace Microsoft.AspNet.SignalR.Hubs
 
             var generateProxy = _generatedTemplate.Value;
 
-            return generateProxy.Replace("{serviceUrl}", serviceUrl);
+            return generateProxy.Replace("{serviceUrl}", serviceUrl, StringComparison.Ordinal);
         }
 
         public string GenerateProxy(string serviceUrl, bool includeDocComments)
@@ -54,7 +54,7 @@ namespace Microsoft.AspNet.SignalR.Hubs
 
             string generateProxy = GenerateProxy(_manager, _javaScriptMinifier, includeDocComments);
 
-            return generateProxy.Replace("{serviceUrl}", serviceUrl);
+            return generateProxy.Replace("{serviceUrl}", serviceUrl, StringComparison.Ordinal);
         }
 
         private static string GenerateProxy(IHubManager hubManager, IJavaScriptMinifier javaScriptMinifier, bool includeDocComments)
@@ -80,7 +80,7 @@ namespace Microsoft.AspNet.SignalR.Hubs
                 hubs.Append(";");
             }
 
-            script = script.Replace("/*hubs*/", hubs.ToString());
+            script = script.Replace("/*hubs*/", hubs.ToString(), StringComparison.Ordinal);
 
             return javaScriptMinifier.Minify(script);
         }
@@ -91,9 +91,9 @@ namespace Microsoft.AspNet.SignalR.Hubs
             var methods = GetMethods(hubManager, descriptor);
             var hubName = GetDescriptorName(descriptor);
 
-            sb.AppendFormat("    proxies['{0}'] = this.createHubProxy('{1}'); ", hubName, hubName).AppendLine();
-            sb.AppendFormat("        proxies['{0}'].client = {{ }};", hubName).AppendLine();
-            sb.AppendFormat("        proxies['{0}'].server = {{", hubName);
+            sb.AppendFormat(CultureInfo.InvariantCulture, "    proxies['{0}'] = this.createHubProxy('{1}'); ", hubName, hubName).AppendLine();
+            sb.AppendFormat(CultureInfo.InvariantCulture, "        proxies['{0}'].client = {{ }};", hubName).AppendLine();
+            sb.AppendFormat(CultureInfo.InvariantCulture, "        proxies['{0}'].server = {{", hubName);
 
             bool first = true;
 
@@ -143,17 +143,17 @@ namespace Microsoft.AspNet.SignalR.Hubs
         {
             var parameterNames = method.Parameters.Select(p => p.Name).ToList();
             sb.AppendLine();
-            sb.AppendFormat("            {0}: function ({1}) {{", GetDescriptorName(method), Commas(parameterNames)).AppendLine();
+            sb.AppendFormat(CultureInfo.InvariantCulture, "            {0}: function ({1}) {{", GetDescriptorName(method), Commas(parameterNames)).AppendLine();
             if (includeDocComments)
             {
-                sb.AppendFormat(Resources.DynamicComment_CallsMethodOnServerSideDeferredPromise, method.Name, method.Hub.Name).AppendLine();
+                sb.AppendFormat(CultureInfo.InvariantCulture, Resources.DynamicComment_CallsMethodOnServerSideDeferredPromise, method.Name, method.Hub.Name).AppendLine();
                 var parameterDoc = method.Parameters.Select(p => String.Format(CultureInfo.CurrentCulture, Resources.DynamicComment_ServerSideTypeIs, p.Name, MapToJavaScriptType(p.ParameterType), p.ParameterType)).ToList();
                 if (parameterDoc.Any())
                 {
                     sb.AppendLine(String.Join(Environment.NewLine, parameterDoc));
                 }
             }
-            sb.AppendFormat("                return proxies['{0}'].invoke.apply(proxies['{0}'], $.merge([\"{1}\"], $.makeArray(arguments)));", hubName, method.Name).AppendLine();
+            sb.AppendFormat(CultureInfo.InvariantCulture, "                return proxies['{0}'].invoke.apply(proxies['{0}'], $.merge([\"{1}\"], $.makeArray(arguments)));", hubName, method.Name).AppendLine();
             sb.Append("             }");
         }
 
@@ -196,7 +196,7 @@ namespace Microsoft.AspNet.SignalR.Hubs
         {
             using (Stream resourceStream = typeof(DefaultJavaScriptProxyGenerator).Assembly.GetManifestResourceStream(ScriptResource))
             {
-                var reader = new StreamReader(resourceStream);
+                using var reader = new StreamReader(resourceStream);
                 return reader.ReadToEnd();
             }
         }

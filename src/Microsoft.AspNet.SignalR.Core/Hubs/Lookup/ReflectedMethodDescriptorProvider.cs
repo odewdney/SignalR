@@ -24,6 +24,10 @@ namespace Microsoft.AspNet.SignalR.Hubs
 
         public IEnumerable<MethodDescriptor> GetMethods(HubDescriptor hub)
         {
+            if (hub == null)
+            {
+                throw new ArgumentNullException(nameof(hub));
+            }
             return FetchMethodsFor(hub)
                 .SelectMany(kv => kv.Value)
                 .ToList();
@@ -121,6 +125,15 @@ namespace Microsoft.AspNet.SignalR.Hubs
         /// <returns>True if the method matching the name/parameter set is found on the hub, otherwise false.</returns>
         public bool TryGetMethod(HubDescriptor hub, string method, out MethodDescriptor descriptor, IList<IJsonValue> parameters)
         {
+            if (hub == null)
+            {
+                throw new ArgumentNullException(nameof(hub));
+            }
+            if (method == null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
             string hubMethodKey = BuildHubExecutableMethodCacheKey(hub, method, parameters);
 
             if (!_executableMethods.TryGetValue(hubMethodKey, out descriptor))

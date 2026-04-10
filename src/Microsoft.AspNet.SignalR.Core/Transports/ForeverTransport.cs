@@ -22,7 +22,9 @@ namespace Microsoft.AspNet.SignalR.Transports
 
         private readonly IPerformanceCounterManager _counters;
         private readonly JsonSerializer _jsonSerializer;
+#pragma warning disable CA2213
         private IDisposable _busRegistration;
+#pragma warning restore CA2213
 
         internal RequestLifetime _transportLifetime;
 
@@ -301,13 +303,13 @@ namespace Microsoft.AspNet.SignalR.Transports
             return new BinaryMemoryPoolTextWriter(memoryPool);
         }
 
-        private static Task PerformSend(object state)
+        private static async Task PerformSend(object state)
         {
             var context = (ForeverTransportContext)state;
 
             if (!context.Transport.IsAlive)
             {
-                return TaskAsyncHelper.Empty;
+                return;
             }
 
             context.Transport.Context.Response.ContentType = JsonUtility.JsonMimeType;
@@ -317,12 +319,10 @@ namespace Microsoft.AspNet.SignalR.Transports
                 context.Transport.JsonSerializer.Serialize(context.State, writer);
                 writer.Flush();
 
-                context.Transport.Context.Response.Write(writer.Buffer);
+                await context.Transport.Context.Response.WriteAsync(writer.Buffer);
 
                 context.Transport.TraceOutgoingMessage(writer.Buffer);
             }
-
-            return TaskAsyncHelper.Empty;
         }
 
         internal void TraceOutgoingMessage(ArraySegment<byte> message)

@@ -34,6 +34,7 @@ namespace Microsoft.AspNet.SignalR.Hosting
         /// </summary>
         /// <param name="data">The data to write to the buffer.</param>
         void Write(ArraySegment<byte> data);
+        Task WriteAsync(ArraySegment<byte> data);
 
         /// <summary>
         /// Flushes the buffered response to the client.

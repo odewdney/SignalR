@@ -49,9 +49,11 @@ namespace Microsoft.AspNet.SignalR
             }
 
             var qualifiedName = CreateQualifiedName(groupName);
+#pragma warning disable CA1062 // Validate arguments of public methods
             var message = new ConnectionMessage(qualifiedName,
                                                 value,
-                                                PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds));
+                                                PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds!));
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             return _connection.Send(message);
         }
@@ -70,9 +72,11 @@ namespace Microsoft.AspNet.SignalR
                 throw new ArgumentNullException("groupNames");
             }
 
+#pragma warning disable CA1062 // Validate arguments of public methods
             var message = new ConnectionMessage(groupNames.Select(groupName => CreateQualifiedName(groupName)).ToList(),
                                                 value,
                                                 PrefixHelper.GetPrefixedConnectionIds(excludeConnectionIds));
+#pragma warning restore CA1062 // Validate arguments of public methods
 
             return _connection.Send(message);
         }

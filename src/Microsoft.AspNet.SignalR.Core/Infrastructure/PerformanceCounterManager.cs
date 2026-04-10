@@ -15,8 +15,55 @@ using System.Threading;
 using Microsoft.AspNet.SignalR.Tracing;
 #endif
 
+
 namespace Microsoft.AspNet.SignalR.Infrastructure
 {
+#if NETCOREAPP
+    public enum PerformanceCounterType
+    {
+        None = 0,
+        NumberOfItems32,
+        NumberOfItems64,
+        RateOfCountsPerSecond32,
+    }
+
+    public struct CounterSample {
+        public static readonly CounterSample Empty;
+
+        PerformanceCounterType CounterType;
+        CounterSample(PerformanceCounterType CounterType)
+        {
+            this.CounterType = CounterType;
+        }
+
+        public bool Equals(CounterSample cs)
+        {
+            return cs.CounterType == CounterType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is CounterSample cs && cs.Equals(this);
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)CounterType;
+        }
+
+        public static bool operator ==(CounterSample left, CounterSample right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(CounterSample left, CounterSample right)
+        {
+            return !(left == right);
+        }
+    }
+
+#endif
+
     /// <summary>
     /// Manages performance counters using Windows performance counters.
     /// </summary>
@@ -435,6 +482,9 @@ namespace Microsoft.AspNet.SignalR.Infrastructure
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Counters are disposed later")]
         public IPerformanceCounter LoadCounter(string categoryName, string counterName, string instanceName, bool isReadOnly)
         {
+#if NETCOREAPP
+            return null;
+#else
             // See http://msdn.microsoft.com/en-us/library/356cx381.aspx for the list of exceptions
             // and when they are thrown. 
             try
@@ -472,6 +522,7 @@ namespace Microsoft.AspNet.SignalR.Infrastructure
                 _trace.TraceEvent(TraceEventType.Error, 0, "Performance counter failed to load: " + ex.GetBaseException());
                 return null;
             }
+#endif
 #endif
         }
     }

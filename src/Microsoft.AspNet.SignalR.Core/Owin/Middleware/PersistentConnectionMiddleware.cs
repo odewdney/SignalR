@@ -5,7 +5,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Hosting;
 using Microsoft.AspNet.SignalR.Json;
+#if NETCOREAPP
+using Microsoft.AspNetCore.Owin;
+#else
 using Microsoft.Owin;
+#endif
 
 namespace Microsoft.AspNet.SignalR.Owin.Middleware
 {

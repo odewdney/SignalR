@@ -89,7 +89,8 @@ namespace Microsoft.AspNet.SignalR.Transports
                 throw new ArgumentNullException("writer");
             }
 
-            var jsonWriter = new JsonTextWriter(writer);
+            using var jsonWriter = new JsonTextWriter(writer) { CloseOutput = false };
+            
             jsonWriter.WriteStartObject();
 
             // REVIEW: Is this 100% correct?

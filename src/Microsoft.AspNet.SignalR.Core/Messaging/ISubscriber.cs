@@ -14,10 +14,11 @@ namespace Microsoft.AspNet.SignalR.Messaging
         Action<TextWriter> WriteCursor { get; set; }
 
         string Identity { get; }
-
+#pragma warning disable CA1003
         event Action<ISubscriber, string> EventKeyAdded;
 
         event Action<ISubscriber, string> EventKeyRemoved;
+#pragma warning restore CA1003
 
         Subscription Subscription { get; set; }
     }
